@@ -6,6 +6,48 @@ All answers are done by myself, in other words, answers are may be not the best 
 
 ##EASY
 
+###Add Digits
+    Given a non-negative integer num, repeatedly add all its digits until the result has only one digit.
+
+    For example:
+    Given num = 38, the process is like: 3 + 8 = 11, 1 + 1 = 2. Since 2 has only one digit, return it.
+
+Recursive program is easy.
+
+```java
+   public int addDigits(int num) {
+        if (num < 10) {
+            return num;
+        }
+
+        String str = num + "";
+        int count = 0;
+        for (char c : str.toCharArray()) {
+            int ic = Integer.parseInt(c + "");
+            count += ic;
+        }
+        return addDigits(count);
+    }
+```
+
+There is a hidden information, the result is a cycle about 9.
+
+```java
+    public int addDigits_v2(int num) {
+        if (num < 10) {
+            return num;
+        } else {
+            int x = num % 9;
+            if (x == 0) {
+                return 9;
+            } else {
+                return x;
+            }
+        }
+    }
+```
+
+
 ###Nim Game
 
 	You are playing the following Nim Game with your friend: There is a heap of stones on the table, each time one of you take turns to remove 1 to 3 stones. 
