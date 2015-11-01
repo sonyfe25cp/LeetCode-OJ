@@ -6,6 +6,32 @@ All answers are done by myself, in other words, answers are may be not the best 
 
 ##EASY
 
+###Maximum Depth of Binary Tree
+
+    Given a binary tree, find its maximum depth.
+
+    The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
+
+This subject is very easy.
+
+```java
+public int maxDepth(TreeNode root) {
+
+    if(root == null){
+        return 0;
+    }
+    TreeNode leftNode = root.left;
+    TreeNode rightNode = root.right;
+    int depth = 1;
+    if(leftNode != null || rightNode !=null){
+        depth += Math.max(maxDepth(leftNode), maxDepth(rightNode));
+    }else{
+        return 1;
+    }
+    return depth;
+}
+```
+
 ###Nim Game
 
 	You are playing the following Nim Game with your friend: There is a heap of stones on the table, each time one of you take turns to remove 1 to 3 stones. 
