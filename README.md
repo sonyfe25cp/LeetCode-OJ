@@ -6,6 +6,39 @@ All answers are done by myself, in other words, answers are may be not the best 
 
 ##EASY
 
+###Move Zeroes
+
+    Given an array nums, write a function to move all 0's to the end of it while maintaining the relative order of the non-zero elements.
+
+    For example, given nums = [0, 1, 0, 3, 12], after calling your function, nums should be [1, 3, 12, 0, 0].
+
+    * You must do this in-place without making a copy of the array.
+    * Minimize the total number of operations.
+
+For this subject, two cursor are used. First one is used to remember the current index of number equal 0. The second one is used to find the next non-0 number. Switch them.
+
+```java
+    public void moveZeroes(int[] nums) {
+        if (nums == null) {
+            return;
+        }
+        for(int i = 0; i < nums.length; i ++){
+            int a = nums[i];
+            if(a == 0){
+                for(int j = i+1; j < nums.length; j ++){
+                    int b = nums[j];
+                    if(b != 0){
+                        nums[i] = b;
+                        nums[j] = a;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+```
+
+
 ###Same Tree
 
     Given two binary trees, write a function to check if they are equal or not.
