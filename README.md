@@ -6,6 +6,54 @@ All answers are done by myself, in other words, answers are may be not the best 
 
 ##EASY
 
+###Same Tree
+
+    Given two binary trees, write a function to check if they are equal or not.
+
+    Two binary trees are considered equal if they are structurally identical and the nodes have the same value.
+
+This subject is easy to implement. I think this is the only way to solve this problem.
+
+ps: This question is appeared in a interview with Microsoft China.
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        boolean flag = false;
+        if(p == null && q == null){
+            return true;
+        }else if(p == null || q == null){
+            return false;
+        }else{
+            int pv = p.val;
+            int qv = q.val;
+
+            if(pv == qv){
+                flag =  true;
+            }else{
+                flag = false;
+            }
+        }    
+        TreeNode pleft = p.left;
+        TreeNode pright = p.right;
+
+        TreeNode qleft = q.left;
+        TreeNode qright = q.right;
+
+        return flag && isSameTree(pleft, qleft) && isSameTree(pright, qright);
+    }
+}
+```
+
 ###Maximum Depth of Binary Tree
 
     Given a binary tree, find its maximum depth.
@@ -15,20 +63,32 @@ All answers are done by myself, in other words, answers are may be not the best 
 This subject is very easy.
 
 ```java
-public int maxDepth(TreeNode root) {
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public int maxDepth(TreeNode root) {
 
-    if(root == null){
-        return 0;
+        if(root == null){
+            return 0;
+        }
+        TreeNode leftNode = root.left;
+        TreeNode rightNode = root.right;
+        int depth = 1;
+        if(leftNode != null || rightNode !=null){
+            depth += Math.max(maxDepth(leftNode), maxDepth(rightNode));
+        }else{
+            return 1;
+        }
+        return depth;
+
     }
-    TreeNode leftNode = root.left;
-    TreeNode rightNode = root.right;
-    int depth = 1;
-    if(leftNode != null || rightNode !=null){
-        depth += Math.max(maxDepth(leftNode), maxDepth(rightNode));
-    }else{
-        return 1;
-    }
-    return depth;
 }
 ```
 
