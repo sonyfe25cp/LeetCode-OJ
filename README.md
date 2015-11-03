@@ -6,6 +6,51 @@ All answers are done by myself, in other words, answers are may be not the best 
 
 ##EASY
 
+###Invert Binary Tree
+    Invert a binary tree.
+
+                  4
+                /   \
+               2     7
+              / \   / \
+             1   3 6   9
+    to
+                  4
+                /   \
+               7     2
+              / \   / \
+             9   6 3   1
+
+Just switch the position of leftNode and rightNode, and return the root.
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode invertTree(TreeNode root) {
+        if(root != null){
+
+            TreeNode leftNode = root.left;
+            TreeNode rightNode = root.right;
+
+            TreeNode middle = leftNode;
+
+            root.left = invertTree(rightNode);
+            root.right = invertTree(middle);
+        }
+        return root;
+
+    }
+}
+```
+
 ###Move Zeroes
 
     Given an array nums, write a function to move all 0's to the end of it while maintaining the relative order of the non-zero elements.
