@@ -48,7 +48,7 @@ public class Solution {
 
     Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?
     
-To find the duplicate, hashset is helpful but need two pass and extra memory. Where's better algorithm?
+To find the duplicate, hashset is helpful but need extra memory. Where's better algorithm?
 
 ```java
 public class Solution {
