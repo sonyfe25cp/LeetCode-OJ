@@ -4,6 +4,36 @@ Update frequency: one day one problem.
 
 All answers are done by myself, in other words, answers are may be not the best but passed.
 
+##Medium
+
+###Single Number
+    
+    Given an array of integers, every element appears twice except for one. Find that single one.
+
+    Note:
+
+    Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?
+    
+To find the duplicate, hashset is helpful but need two pass and extra memory. Where's better algorithm?
+
+```java
+public class Solution {
+    public int singleNumber(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        int total = 0;
+        for(int i : nums){
+            if(set.contains(i)){
+                total -= i;
+            }else{
+                total += i;
+            }
+            set.add(i);
+        }
+        return total;
+    }
+}
+```
+
 ##EASY
 
 ###Contains Duplicate
