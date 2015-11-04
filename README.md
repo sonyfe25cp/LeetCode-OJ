@@ -70,6 +70,55 @@ public class Solution {
 
 ##EASY
 
+###Valid Anagram
+
+    Given two strings s and t, write a function to determine if t is an anagram of s.
+
+    For example,
+    s = "anagram", t = "nagaram", return true.
+    s = "rat", t = "car", return false.
+
+    Note:
+    You may assume the string contains only lowercase alphabets.
+
+First, the subject aims to judge anagram, not contains. Anagram means two string with the same length and same characters.
+Second, use two hashmap to compare is ok. After sorting, compare each character is also ok.
+
+```java
+public class Solution {
+    public boolean isAnagram(String s, String t) {
+        if(s == null || t == null){
+            return false;
+        }
+        List<String> string = toString(s);
+        List<String> tstring = toString(t);
+        Collections.sort(string);
+        Collections.sort(tstring);
+        if(string.size() == tstring.size()){
+            for(int i = 0; i < string.size(); i ++){
+                String s1 = string.get(i);
+                String s2 = tstring.get(i);
+                if(!s1.equals(s2)){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+    public List<String> toString(String s){
+        char[] sChildren = s.toCharArray();
+        List<String> list = new ArrayList<>();
+        for(char c : sChildren){
+            list.add(c+"");
+        }
+        return list;
+    }
+}
+```
+
+
+
 ###Contains Duplicate
 
     Given an array of integers, find if the array contains any duplicates. Your function should return true if any value appears at least twice in the array, and it should return false if every element is distinct.
