@@ -106,6 +106,35 @@ public class Solution {
 
 ##EASY
 
+###Majority element
+
+    Given an array of size n, find the majority element. The majority element is the element that appears more than ⌊ n/2 ⌋ times.
+
+    You may assume that the array is non-empty and the majority element always exist in the array.
+
+Use a map to record the number of each num, once someone is over than n/2, return it.
+
+```java
+public class Solution {
+    public int majorityElement(int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>();
+        float theta = nums.length / 2.0f ;
+        for(int num : nums){
+            int sum = 0;
+            if(map.containsKey(num)){
+                sum = map.get(num);
+            }
+            sum += 1;
+            if(sum > theta){
+                return num;
+            }
+            map.put(num, sum);
+        }
+        return 0;
+    }
+} 
+```
+
 ###Valid Anagram
 
     Given two strings s and t, write a function to determine if t is an anagram of s.
