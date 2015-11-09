@@ -106,6 +106,52 @@ public class Solution {
 
 ##EASY
 
+###Ugly Number
+
+    Write a program to check whether a given number is an ugly number.
+
+    Ugly numbers are positive numbers whose prime factors only include 2, 3, 5. For example, 6, 8 are ugly while 14 is not ugly since it includes another prime factor 7.
+
+    Note that 1 is typically treated as an ugly number.
+
+The most important thing is the precision of float is not enough than double.
+
+```java
+public boolean isUgly(int num) {
+
+        if (num == 0) {
+            return false;
+        } else {
+            double[] array = new double[]{5.0, 3.0, 2.0};
+            for (double i : array) {
+                boolean flg = false;
+                do {
+                    double x = num / i;
+                    flg = isTrue(x);
+                    if (flg) {
+                        num = (int)Math.round(x);
+                    }
+                } while (flg);
+            }
+            if (num == 2 || num == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    private boolean isTrue(double x) {
+        long xi = Math.round(x);
+        double theta = 0.0001;
+        if (Math.abs(x - xi) > theta) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+```
+
 ###Happy Number
 
     Write an algorithm to determine if a number is "happy".
