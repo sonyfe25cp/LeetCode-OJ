@@ -108,6 +108,70 @@ public class Solution {
 
 ##EASY
 
+###Count Primes
+
+    Count the number of prime numbers less than a non-negative number, n.
+
+    Hint:
+    Let's start with a isPrime function. To determine if a number is prime, we need to check if it is not divisible by any number less than n. The runtime complexity of isPrime function would be O(n) and hence counting the total prime numbers up to n would be O(n2). Could we do better?
+
+    As we know the number must not be divisible by any number > n / 2, we can immediately cut the total iterations half by dividing only up to n / 2. Could we still do better?
+
+Let's from i = 2 to n, and remove their times. 0 and 1 are not prime number.
+
+```java
+public class Solution {
+    public int countPrimes(int n) {
+        boolean[] array = new boolean[n];
+        for (int i = 2; i * i  < n; i++) {
+            if (!array[i]) {
+                for (int j = i; i * j < n; j++) {
+                    array[i * j] = true;
+                }
+            }
+        }
+        int count = 0;
+        for(int i = 2; i < array.length; i ++){
+            if(array[i] == false){
+                count++;
+            }
+        }
+        return count;
+    }
+}
+```
+
+
+###Missing Number
+
+    Given an array containing n distinct numbers taken from 0, 1, 2, ..., n, find the one that is missing from the array.
+
+    For example,
+    Given nums = [0, 1, 3] return 2.
+
+    Note:
+    Your algorithm should run in linear runtime complexity. Could you implement it using only constant extra space complexity?
+
+Find it with the sum of arithmetic progression.
+
+```java
+public class Solution {
+    public int missingNumber(int[] nums) {
+        if(nums == null){
+            return 0;
+        }
+        int total = 0; 
+        for(int i : nums){
+            total += i;
+        }
+        int length = nums.length+1;
+        int sum = length*(length-1)/2;
+        return sum - total;
+    }
+}
+```
+
+
 ###House Robber
 
     You are a professional robber planning to rob houses along a street.
