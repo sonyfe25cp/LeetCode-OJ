@@ -108,6 +108,41 @@ public class Solution {
 
 ##EASY
 
+###Summary Ranges
+
+    Given a sorted integer array without duplicates, return the summary of its ranges.
+
+    For example, given [0,1,2,4,5,7], return ["0->2","4->5","7"].
+
+Let's use two cursor as begin and end. if nums[end+1] = nums[end]+1 then end++, else the last number of substring is found.
+
+```java
+public class Solution {
+    public List<String> summaryRanges(int[] nums) {
+        List<String> list = new ArrayList<>();
+        if (nums == null || nums.length == 0) {
+            return list;
+        }
+        int begin = 0;
+        int last = 0;
+        while (last < nums.length) {
+            if (last + 1 < nums.length && nums[last + 1] == nums[last] + 1) {
+                last++;
+            } else {
+                if (begin == last) {
+                    list.add(nums[last] + "");
+                } else {
+                    list.add(nums[begin] + "->" + nums[last]);
+                }
+                last++;
+                begin = last;
+            }
+        }
+        return list;
+    }
+}
+```
+
 ###Count Primes
 
     Count the number of prime numbers less than a non-negative number, n.
