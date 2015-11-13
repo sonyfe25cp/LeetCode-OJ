@@ -108,6 +108,40 @@ public class Solution {
 
 ##EASY
 
+###Rotate Array
+
+    Rotate an array of n elements to the right by k steps.
+
+    For example, with n = 7 and k = 3, the array [1,2,3,4,5,6,7] is rotated to [5,6,7,1,2,3,4].
+
+The first method: we can allocate a new array, and set each value with array[i + k]. Once i+k bigger than array.length, relocate with i+k-array.length.
+The second method: let's find the turn point 5 in the sample. Reverse the [1,2,3,4] and [5,6,7] then we get [4,3,2,1,7,6,5], reverse the whole array is ok then we get [5,6,7,1,2,3,4].
+
+```java
+public class Solution {
+    public void rotate(int[] nums, int k) {
+        if(nums == null || nums.length == 0 || k == 0 || nums.length == 1){
+            return;
+        }
+       k = k % nums.length;
+       reverse(nums, 0, nums.length - k - 1);
+       reverse(nums, nums.length -k, nums.length-1);
+       reverse(nums, 0, nums.length - 1);
+
+    }
+    private void reverse(int[] nums, int begin, int end){
+        int tmp = 0;
+        while(begin < end){
+            tmp = nums[end];
+            nums[end] = nums[begin];
+            nums[begin] = tmp;
+            begin ++;
+            end --;
+        }
+    }
+}
+```
+
 ###Summary Ranges
 
     Given a sorted integer array without duplicates, return the summary of its ranges.
