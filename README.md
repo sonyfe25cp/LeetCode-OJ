@@ -108,6 +108,20 @@ public class Solution {
 
 ##EASY
 
+###Power of Two
+
+    Given an integer, write a function to determine if it is a power of two.
+
+If an integer n is a power of two, then use it do &  with n-1 should be 0.
+
+```java
+public class Solution {
+    public boolean isPowerOfTwo(int n) {
+        return n > 0 && ((n & (n - 1)) == 0 );
+    }
+}
+```
+
 ###First Bad Version
 
     You are a product manager and currently leading a team to develop a new product. Unfortunately, the latest version of your product fails the quality check. Since each version is developed based on the previous version, all the versions after a bad version are also bad.
