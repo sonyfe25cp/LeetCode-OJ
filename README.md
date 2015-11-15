@@ -108,6 +108,40 @@ public class Solution {
 
 ##EASY
 
+###First Bad Version
+
+    You are a product manager and currently leading a team to develop a new product. Unfortunately, the latest version of your product fails the quality check. Since each version is developed based on the previous version, all the versions after a bad version are also bad.
+
+    Suppose you have n versions [1, 2, ..., n] and you want to find out the first bad one, which causes all the following ones to be bad.
+
+    You are given an API bool isBadVersion(version) which will return whether version is bad. Implement a function to find the first bad version. You should minimize the number of calls to the API.
+
+Binary search is ok and be careful about the middle number : low + (high - low)/2
+
+```java
+/* The isBadVersion API is defined in the parent class VersionControl.
+   boolean isBadVersion(int version); */
+
+public class Solution extends VersionControl {
+    public int firstBadVersion(int n) {
+
+        int begin = 1;
+        int end = n;
+
+        while(begin < end){
+            int middle = begin + (end - begin) / 2;
+            boolean bad  = isBadVersion(middle);
+            if(bad){
+                end = middle;
+            }else{
+                begin = middle + 1;
+            }
+        } 
+        return begin;
+    }
+}
+```
+
 ###Rotate Array
 
     Rotate an array of n elements to the right by k steps.
