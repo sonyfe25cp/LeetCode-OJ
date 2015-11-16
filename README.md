@@ -108,6 +108,47 @@ public class Solution {
 
 ##EASY
 
+###Length of Last word
+
+    Given a string s consists of upper/lower-case alphabets and empty space characters ' ', return the length of last word in the string.
+
+    If the last word does not exist, return 0.
+
+    Note: A word is defined as a character sequence consists of non-space characters only.
+
+    For example, 
+    Given s = "Hello World",
+    return 5.
+
+There are many API can do this, such as `split`. However this problem just need the last word, so let's just compute the last one is ok, not blank.
+
+```java
+public class Solution {
+    public int lengthOfLastWord(String s) {
+        if(s == null || s.length() == 0){
+            return 0;
+        }else{
+            boolean flag = false;
+            int res = 0;
+            for(int i = s.length()-1; i >= 0; i --){
+                char c = s.charAt(i);
+                if(c == ' '){
+                    if(flag){
+                        break;
+                    }else{
+                        continue;
+                    }
+                }else{
+                    flag = true;
+                    res ++;
+                }
+            }
+            return res;
+        }
+    }
+}
+```
+
 ###Longest Common Prefix
 
     Write a function to find the longest common prefix string amongst an array of strings.
