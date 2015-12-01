@@ -8,6 +8,45 @@ From these subjects, I found dynamic programming is very important.
 
 ##Hard
 
+###Edit Distance
+
+    Given two words word1 and word2, find the minimum number of steps required to convert word1 to word2. (each operation is counted as 1 step.)
+
+    You have the following 3 operations permitted on a word:
+
+    a) Insert a character
+    b) Delete a character
+    c) Replace a character
+
+Another dynamic programming problem. Compare character one by one, and then dynamic programming.
+
+```java
+public class Solution {
+    public int minDistance(String word1, String word2) {
+        int row = word1.length()+1;
+        int col = word2.length()+1;
+        int[][] matrix = new int[row][col];
+        for(int i = 0; i < row; i ++){
+            matrix[i][0] = i;
+        }
+        for(int j = 0; j < col; j ++){
+            matrix[0][j] = j;
+        }
+        for(int i = 1; i < row; i ++){
+            for(int j = 1; j < col; j ++){
+                if(word1.charAt(i-1) == word2.charAt(j-1)){
+                    matrix[i][j] = matrix[i-1][j-1];
+                }else{
+                    matrix[i][j] = matrix[i-1][j-1]+1;
+                }
+                matrix[i][j] = Math.min(matrix[i][j], Math.min(matrix[i-1][j] + 1, matrix[i][j-1] + 1 ));
+            }
+        }
+        return matrix[row-1][col-1];
+    }
+}
+```
+
 ###Trapping Rain Water
 
     Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it is able to trap after raining.
