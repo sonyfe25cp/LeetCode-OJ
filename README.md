@@ -8,6 +8,95 @@ From these subjects, I found dynamic programming is very important.
 
 ##Hard
 
+###Longest Consecutive Sequence
+
+    Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
+
+    For example,
+    Given [100, 4, 200, 1, 3, 2],
+    The longest consecutive elements sequence is [1, 2, 3, 4]. Return its length: 4.
+
+    Your algorithm should run in O(n) complexity.
+
+Because of the O(n) requirement, sort the array is not allowed.
+We can search each num and increse it or decrease it to check whether the new num is also in the array.
+
+```java
+public class Solution {
+    public int longestConsecutive(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        for(int i : nums){
+            set.add(i);
+        }
+        int res = 1;
+        for(int i = 0; i < nums.length; i ++){
+            int curr = nums[i];
+            int curr_high = curr +1;
+            int tmpLength = 1;
+            while(set.contains(curr_high)){
+                set.remove(curr_high);
+                tmpLength ++;
+                curr_high++;
+            }
+
+            int curr_low = curr -1;
+            while(set.contains(curr_low)){
+                set.remove(curr_low);
+                tmpLength ++;
+                curr_low--;
+            }
+            if(tmpLength >= res){
+                res = tmpLength;
+            }
+        }
+        return res;
+    }
+}
+```
+
+###Find the Duplicate number
+
+    Given an array nums containing n + 1 integers where each integer is between 1 and n (inclusive), prove that at least one duplicate number must exist. Assume that there is only one duplicate number, find the duplicate one.
+
+    Note:
+    You must not modify the array (assume the array is read only).
+    You must use only constant, O(1) extra space.
+    Your runtime complexity should be less than O(n2).
+    There is only one duplicate number in the array, but it could be repeated more than once.
+
+Let's think about this: the array from 1 to 10, let mid = 5, nums smaller than 5 should be 5, if bigger than 5, the duplicate number must exists in the lower, else, in the upper.
+
+```java
+public class Solution {
+    public int findDuplicate(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length -1 ;
+        int low = 0;
+        int high = n;
+        int middle = 0;
+        while(low < high){
+            middle = low + (high-low)/2;
+            int c = count(nums, middle);
+            if(c <= middle){
+                low = middle + 1;
+            }else{
+                high = middle;
+            }
+        }
+        return nums[low];
+    }
+    private int count(int[] nums, int middle){
+        int c = 0;
+        for(int i = 0; i < nums.length; i ++){
+            if(nums[i] <= middle){
+                c ++;
+            }
+        }
+        return c;
+    }
+}
+```
+
 ###Search in Rotated Sorted array
 
     Suppose a sorted array is rotated at some pivot unknown to you beforehand.
