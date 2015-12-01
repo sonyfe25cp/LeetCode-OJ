@@ -8,6 +8,38 @@ From these subjects, I found dynamic programming is very important.
 
 ##Hard
 
+###Trapping Rain Water
+
+    Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it is able to trap after raining.
+
+    For example, 
+    Given [0,1,0,2,1,0,1,3,2,1,2,1], return 6.
+
+Set a secondHigh, move cursor from end to middle and add (secondHigh - min(num[begin], num[end]).
+
+```java
+public class Solution {
+    public int trap(int[] height) {
+    int n = height.length;
+    int secHight = 0;
+    int left = 0;
+    int right = n-1;
+    int area = 0;
+    while (left < right){
+        if (height[left] < height[right]){
+            secHight = Math.max(height[left], secHight);
+            area += secHight-height[left];
+            left++;
+        } else {
+            secHight = Math.max(height[right], secHight);
+            area += secHight-height[right];
+            right--;
+        }
+    }
+    return area;
+}
+```
+
 ###Longest Consecutive Sequence
 
     Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
