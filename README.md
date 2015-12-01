@@ -34,14 +34,14 @@ public class Solution {
             int curr_high = curr +1;
             int tmpLength = 1;
             while(set.contains(curr_high)){
-                set.remove(curr_high);
+                set.remove(curr_high);//remove it is very important to fulfill the O(n) requirement.
                 tmpLength ++;
                 curr_high++;
             }
 
             int curr_low = curr -1;
             while(set.contains(curr_low)){
-                set.remove(curr_low);
+                set.remove(curr_low);//remove it is very important to fulfill the O(n) requirement.
                 tmpLength ++;
                 curr_low--;
             }
