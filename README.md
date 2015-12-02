@@ -2,7 +2,7 @@
 
 Update frequency: one day one problem.
 
-All answers are done by myself, in other words, answers are may be not the best but passed.
+All answers are done by myself, in other words, answers are may be not the best but accepted.
 
 From these subjects, I found dynamic programming is very important.
 
@@ -221,6 +221,69 @@ public class Solution {
 
 
 ##Medium
+
+###Largest Number
+
+    Given a list of non negative integers, arrange them such that they form the largest number.
+
+    For example, given [3, 30, 34, 5, 9], the largest formed number is 9534330.
+
+    Note: The result may be very large, so you need to return a string instead of an integer.
+
+Sort the array, compare each two numbers, if a+b > b+a, then a should be place the left of b.
+
+```java
+public class Solution {
+    public String largestNumber(int[] nums) {
+        if(nums == null || nums.length == 0){
+            return "";
+        }
+        String[] strs = new String[nums.length];
+        for(int i=0; i < nums.length; i++){
+            strs[i] = nums[i]+"";
+        }
+        Arrays.sort(strs, new Comparator<String>(){
+                @Override  
+                public int compare(String s1, String s2) {  
+                String a = s1+s2;
+                String b = s2+s1;
+                return -a.compareTo(b);
+                }
+                });
+        StringBuilder sb = new StringBuilder();
+        for(String s : strs){
+            System.out.print(s+ " ");
+            sb.append(s);
+        }
+        return sb.toString().replaceFirst("^0+(?!$)", "");
+    }
+}
+```
+
+###Single Number II
+
+    Given an array of integers, every element appears three times except for one. Find that single one.
+
+    Note:
+    Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?
+
+Because each int number has 32 bit, let create a 32 size array to identify each bit. Then, compute the number of 1 in each bit, if the count%3 not equal 0, then the number will be find.
+
+```java
+public class Solution {
+    public int singleNumber(int[] nums) {
+        int[] bitnum=new int[32];  
+        int res=0;  
+        for(int i=0; i<32; i++){  
+            for(int j=0; j< nums.length; j++){  
+                bitnum[i]+=(nums[j]>>i)&1;  
+            }  
+            res|=(bitnum[i]%3)<<i;  
+        }  
+        return res;  
+    }
+}
+```
 
 ###Search Insert Position
 
