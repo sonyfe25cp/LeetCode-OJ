@@ -222,6 +222,452 @@ public class Solution {
 
 ##Medium
 
+###Missing Ranges
+
+    Given a sorted integer array where the range of elements are [lower, upper] inclusive, return its missing ranges.
+    For example, given [0, 1, 3, 50, 75], lower = 0 and upper = 99, return ["2", "4->49", "51->74", "76->99"].
+
+Scan the list, and update the lower cursor.
+
+```java
+public class Solution {
+    public List<String> findMissingRanges(int[] A, int lower, int upper) {
+        if(A==null){
+            return null;
+        }
+        List<String> list = new ArrayList<>();
+
+        for(int i = 0; i < A.length; i ++){
+            while( i < A.length && A[i] == lower){
+                lower++;
+                i++;
+            }
+            if(i >= A.length){
+                break;
+            }
+            int current = A[i];
+            if(lower + 1 < current){
+                list.add(lower+"->"+(current-1));
+            }else{
+                list.add(lower+"");
+            }
+            lower = current + 1;
+        }
+        if(lower == upper){
+            list.add(lower+"");
+        }else if(lower < upper){
+            list.add(lower+"->"+upper);
+        }
+        return list;
+    }
+}
+```
+
+###Perfect Squares
+
+    Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
+
+    For example, given n = 12, return 3 because 12 = 4 + 4 + 4; given n = 13, return 2 because 13 = 4 + 9.
+
+Dynamic programming. Assume dp[n] is the least number of perfect square numbers.
+For example. dp[9] = min(dp[9], dp[1]+dp[8]) min(dp[9], dp[2]+dp[7]) …… and so on...
+
+```java
+public class Solution {
+    public int numSquares(int n) {
+
+        int[] dp = new int[n+1];
+        dp[1] = 1;
+        for(int i = 2; i <= n ; i ++){
+            int c = (int)Math.sqrt(i);
+            if(i == c * c){
+                dp[i] = 1;
+            }else{
+                dp[i] = i;
+            }
+            for(int a = 1; a <= i/2; a++){
+                int b = i - a;
+                dp[i] = Math.min(dp[i], dp[a] + dp[b]);
+            }
+        }
+        return dp[n];
+    }
+}
+```
+
+
+###Number of Islands
+
+    Given a 2d grid map of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+
+    Example 1:
+
+    11110
+    11010
+    11000
+    00000
+    Answer: 1
+
+    Example 2:
+
+    11000
+    11000
+    00100
+    00011
+    Answer: 3
+
+Check each number of around 1, then change it to other number. DFS.
+
+```java
+public class Solution {
+    int rows = 0;
+    int cols = 0;
+    public int numIslands(char[][] grid) {
+        if(grid == null) return 0;
+        rows = grid.length;
+        if(rows == 0){
+            return 0;
+        }
+        cols = grid[0].length;
+        if(cols == 0){
+            return 0;
+        }
+
+        int count = 0;
+        for(int i = 0; i < rows; i ++){
+            for(int j = 0; j < cols; j ++){
+                if(grid[i][j] != '1'){
+                    continue;
+                }
+                check(grid, i, j);
+                count ++;
+            }
+        }
+        return count;
+    }
+
+    public void check(char[][] grid, int i, int j){
+        if(i >= rows || i < 0 || j >= cols || j< 0){
+            return;
+        }
+        if(grid[i][j] == '1'){
+            grid[i][j] = '2';
+            check(grid, i-1, j);
+            check(grid, i+1, j);
+            check(grid, i, j-1);
+            check(grid, i, j+1);
+        }
+    }
+
+}
+```
+
+
+###Peeking Iterator
+
+    Given an Iterator class interface with methods: next() and hasNext(), design and implement a PeekingIterator that support the peek() operation -- it essentially peek() at the element that will be returned by the next call to next().
+
+    Here is an example. Assume that the iterator is initialized to the beginning of the list: [1, 2, 3].
+
+    Call next() gets you 1, the first element in the list.
+
+    Now you call peek() and it returns 2, the next element. Calling next() after that still return 2.
+
+    You call next() the final time and it returns 3, the last element. Calling hasNext() after that should return false.
+
+Use a cursor to identify the current position.
+
+```java
+// Java Iterator interface reference:
+// https://docs.oracle.com/javase/8/docs/api/java/util/Iterator.html
+class PeekingIterator implements Iterator<Integer> {
+
+    List<Integer> list = new ArrayList<>();
+    int cursor = 0;
+
+	public PeekingIterator(Iterator<Integer> iterator) {
+	    // initialize any member here.
+	    while(iterator.hasNext()){
+	        list.add(iterator.next());
+	    }
+	}
+
+    // Returns the next element in the iteration without advancing the iterator.
+	public Integer peek() {
+        return list.get(cursor);
+	}
+
+	// hasNext() and next() should behave the same as in the Iterator interface.
+	// Override them if needed.
+	@Override
+	public Integer next() {
+	    Integer res = list.get(cursor);
+	    cursor++;
+	    return res;
+	}
+
+	@Override
+	public boolean hasNext() {
+	    if(cursor >= list.size()){
+	        return false;
+	    }else{
+	        return true;
+	    }
+	}
+}
+```
+
+###Search a 2D Matrix
+
+    Write an efficient algorithm that searches for a value in an m x n matrix. This matrix has the following properties:
+
+    Integers in each row are sorted from left to right.
+    The first integer of each row is greater than the last integer of the previous row.
+    For example,
+
+    Consider the following matrix:
+
+    [
+      [1,   3,  5,  7],
+      [10, 11, 16, 20],
+      [23, 30, 34, 50]
+    ]
+    Given target = 3, return true.
+
+First, do binary search to find the right row. Second, binary search the right row.
+
+```java
+public class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+
+        int lowRow = 0;
+        int highRow = matrix.length - 1;
+        int colSize = matrix[0].length-1;
+        while(lowRow < highRow){
+            int midRow = lowRow + (highRow - lowRow) /2;
+            int end = matrix[midRow][colSize];
+            if(end < target){
+                lowRow = midRow + 1;
+            }else{
+                highRow = midRow;
+            }
+        }
+
+        int rightRow = lowRow;
+        int low = 0;
+        int high = colSize;
+
+        while(low <= high){
+            int mid = low + (high - low) /2;
+            int cur = matrix[rightRow][mid];
+
+
+            if(cur < target){
+                low = mid + 1;
+            }else if(cur > target){
+                high = mid - 1;
+            }else{
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+###Strobogrammatic Number II
+
+    A strobogrammatic number is a number that looks the same when rotated 180 degrees (looked at upside down).
+
+    Find all strobogrammatic numbers that are of length = n.
+
+    For example,
+    Given n = 2, return ["11","69","88","96"].
+
+    Hint:
+    Try to use recursion and notice that it should recurse with n - 2 instead of n - 1.
+
+Generate each string like Fibonacci.
+
+```java
+public class StrobogrammaticNumber247 {
+    static Map<Character, Character> map = new HashMap<>();
+
+    static {
+        map.put('0', '0');
+        map.put('1', '1');
+        map.put('6', '9');
+        map.put('8', '8');
+        map.put('9', '6');
+    }
+
+    public List<String> findStrobogrammatic(int n) {
+        List<String> result = new ArrayList<>();
+        if (n == 1) {
+            result.add("1");
+            result.add("8");
+            result.add("0");
+            return result;
+        } else if (n == 2) {
+            for (Map.Entry<Character, Character> entry : map.entrySet()) {
+                Character key = entry.getKey();
+                Character value = entry.getValue();
+                result.add(key + "" + value);
+            }
+            return result;
+        } else {
+            List<String> around = findStrobogrammatic(2);
+            for (String str : around) {
+                List<String> strobogrammatic = findStrobogrammatic(n - 2);
+                for (String ns : strobogrammatic) {
+                    String tmp = str.charAt(0) + ns + str.charAt(1);
+                    result.add(tmp);
+                }
+            }
+            List<String> res = new ArrayList<>();
+            for (String s : result) {
+                if (!s.startsWith("0")) {
+                    res.add(s);
+                }
+            }
+            return res;
+        }
+    }
+}
+```
+
+
+###Wiggle Sort
+
+    Given an unsorted array nums, reorder it in-place such that nums[0] <= nums[1] >= nums[2] <= nums[3]....
+    For example, given nums = [3, 5, 2, 1, 6, 4], one possible answer is [1, 6, 2, 5, 3, 4].
+
+The greed algorithm will be ok.
+
+```java
+public class Solution {
+    public void wiggleSort(int[] nums) {
+            if(nums==null || nums.length<2) return;
+            for(int i=1; i<nums.length; i++) {
+                if( (i%2==1 && (nums[i] < nums[i-1])) || (i%2==0) && (nums[i] > nums[i-1])) {
+                    int temp = nums[i];
+                    nums[i] = nums[i-1];
+                    nums[i-1] = temp;
+                }
+            }
+
+        }
+}
+```
+
+###Word Break *
+
+    Given a string s and a dictionary of words dict, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
+
+    For example, given
+    s = "leetcode",
+    dict = ["leet", "code"].
+
+    Return true because "leetcode" can be segmented as "leet code".
+
+If we write a recurse program, it's easy.
+
+```java
+public class Solution {
+    public boolean wordBreak(String s, Set<String> wordDict) {
+        if(s == null){
+            return false;
+        }
+        if(wordDict.contains(s)){
+            return true;
+        }
+        for(int i = 0; i < s.length() ; i++){
+            String sub = s.substring(0, i);
+            String left = s.substring(i, s.length());
+            boolean flag =  wordDict.contains(sub) && wordBreak(left, wordDict);
+            if(flag){
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+Of course, this program will Time Limited Exceeded. If use dynamic programming, will be better.
+For each sentence, F(0,N) = F(0,i) && F(i,j) && F(j,N)
+
+```java
+public class Solution {
+    public boolean wordBreak(String s, Set<String> wordDict) {
+        if(s == null){
+            return false;
+        }
+        int len = s.length();
+        boolean[] array = new boolean[len + 1];
+        array[0] = true;
+        for(int i = 1; i <= len; i++){
+            for(int j = 0; j < i; j ++){
+                if(array[j] && wordDict.contains(s.substring(j, i))){
+                    array[i] = true;
+                    break;
+                }
+            }
+        }
+        return array[len];
+    }
+}
+
+```
+
+###Zigzag Iterator
+
+    Given two 1d vectors, implement an iterator to return their elements alternately.
+    For example, given two 1d vectors:
+    v1 = [1, 2]
+    v2 = [3, 4, 5, 6]
+    By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1, 3, 2, 4, 5, 6].
+    Follow up: What if you are given k 1d vectors? How well can your code be extended to such cases?
+    Clarification for the follow up question - Update (2015-09-18):
+    The "Zigzag" order is not clearly defined and is ambiguous for k > 2 cases. If "Zigzag" does not look right to you, replace "Zigzag" with "Cyclic". For example, given the following input:
+    [1,2,3]
+    [4,5,6,7]
+    [8,9]
+    It should return [1,4,8,2,5,9,3,6,7].
+
+Put all the list into a List and iterater it.
+
+```java
+public class Zigzag{
+    List<Iterator<Integer>> list = new ArrayList<>();
+    int count = 0;
+    public Zigzag(List<Integer> a, List<Integer> b){
+        if(!a.isEmplty()){
+            list.add(a.iterator());
+        }
+        if(!b.isEmplty()){
+            list.add(b.iterator());
+        }
+    }
+    public boolean hasNext(){
+        return !list.isEmpty();
+    }
+    int count = 0;
+    public int next(){
+        int x = list.get(count).next();
+        if(!list.get(count).hasNext()){
+            list.remove(count);
+        }else{
+            count++;
+        }
+        if(list.size() != 0){
+            count = count % list.size();
+        }
+        return x;
+    }
+}
+```
+
 ###Largest Number
 
     Given a list of non negative integers, arrange them such that they form the largest number.
@@ -428,6 +874,257 @@ public class Solution {
 ```
 
 ##EASY
+
+###Palindrome Permutation
+
+    Given a string, determine if a permutation of the string could form a palindrome.
+
+    For example, "code" -> False, "aab" -> True, "carerac" -> True.
+
+    Hint:
+
+    Consider the palindromes of odd vs even length. What difference do you notice? Count the frequency of each character. If each character occurs even number of times, then it must be a palindrome. How about character which occurs odd number of times?
+
+Just judge whether the string can construct a palindrome. Use a set is ok.
+
+```java
+public class Solution{
+
+    public boolean canPermutePalindrome(String s) {
+        if(s == null || s.length() == 0){
+            return false;
+        }
+        Set<Character> set = new HashSet<>();
+        for(int i = 0; i < s.length(); i ++){
+            char c = s.charAt(i);
+            if(set.contains(c)){
+                set.remove(c);
+            }else{
+                set.add(c);
+            }
+        }
+        if(set.size() <= 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+}
+```
+
+###Plus One
+
+    Given a non-negative number represented as an array of digits, plus one to the number.
+
+    The digits are stored such that the most significant digit is at the head of the list.
+
+Use a new list to store the results.
+
+```java
+public class Solution {
+    public int[] plusOne(int[] digits) {
+
+    List<Integer> list = new ArrayList<>();
+
+        boolean addOne = true;
+        int tmp = 0;
+        for(int i = digits.length-1 ; i > -1; i--){
+            int cur = digits[i];
+            if(tmp == 0 && addOne){
+                int res = cur + 1;
+                if(res  == 10 ){
+                    tmp = 1;
+                    list.add(0);
+                }else{
+                    list.add(res);
+                }
+                addOne = false;
+            }else{
+                int res = cur + tmp;
+                if(res == 10){
+                    tmp = 1;
+                    list.add(0);
+                }else{
+                    list.add(res);
+                    tmp = 0;
+                }
+            }
+        }
+        if(tmp == 1){
+            list.add(1);
+        }
+
+        int[] array = new int[list.size()];
+        for(int i = 0; i < list.size(); i ++){
+            array[i] = list.get(list.size()- 1 - i);
+        }
+        return array;
+    }
+}
+```
+
+###Strobogrammatic Number I
+
+    A strobogrammatic number is a number that looks the same when rotated 180 degrees (looked at upside down).
+
+    Write a function to determine if a number is strobogrammatic. The number is represented as a string.
+
+    For example, the numbers "69", "88", and "818" are all strobogrammatic.
+
+Judge it one by one.
+
+```java
+public class StrobogrammaticNumber246 {
+    static Map<Character, Character> map = new HashMap<>();
+
+    static {
+        map.put('0', '0');
+        map.put('1', '1');
+        map.put('6', '9');
+        map.put('8', '8');
+        map.put('9', '6');
+    }
+
+    public boolean isStrobogrammatic(String number) {
+        int begin = 0;
+        int end = number.length() - 1;
+        while (begin <= end) {
+            char c = number.charAt(begin);
+            char last = number.charAt(end);
+            Character character = map.get(c);
+            if (character == null || (character != last)) {
+                return false;
+            }
+            begin++;
+            end--;
+        }
+        return true;
+    }
+}
+```
+
+
+###Unique Word Abbreviation
+
+    An abbreviation of a word follows the form <first letter><number><last letter>. Below are some examples of word abbreviations:
+    a) it                      --> it    (no abbreviation)
+         1
+    b) d|o|g                   --> d1g
+                  1    1  1
+         1---5----0----5--8
+    c) i|nternationalizatio|n  --> i18n
+                  1
+         1---5----0
+    d) l|ocalizatio|n          --> l10n
+    Assume you have a dictionary and given a word, find whether its abbreviation is unique in the dictionary.
+    A word's abbreviation is unique if no other word from the dictionary has the same abbreviation.
+    Example:
+    Given dictionary = [ "deer", "door", "cake", "card" ]
+
+    isUnique("dear") -> false
+    isUnique("cart") -> true
+    isUnique("cane") -> false
+    isUnique("make") -> true
+
+First, put all the elements with its abbr into a map. Second find the value > 1 in the map.
+
+```java
+public class UniqueWordAbbreviation288 {
+    public void findUnique(String[] dict) {
+        Map<String, Integer> map = new HashMap<>();
+        Map<String, List<String>> originMap = new HashMap<>();
+        for (String string : dict) {
+            String abbr = string;
+            if (string.length() > 2) {
+                abbr = "" + string.charAt(0) + (string.length() - 2) + string.charAt(string.length() - 1);
+            }
+            Integer integer = map.get(abbr);
+            if (integer == null) {
+                integer = 0;
+            }
+            integer++;
+            map.put(abbr, integer);
+
+            List<String> strings = originMap.get(abbr);
+            if (strings == null) {
+                strings = new ArrayList<>();
+            }
+            strings.add(string);
+            originMap.put(abbr, strings);
+        }
+
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            String abbr = entry.getKey();
+            List<String> strings = originMap.get(abbr);
+            if (entry.getValue() == 1) {
+                System.out.println("isUnique(\"" + strings.get(0) + "\") -> true");
+            } else {
+                for (String s : strings) {
+                    System.out.println("isUnique(\"" + s + "\") -> false");
+                }
+            }
+        }
+    }
+}
+```
+
+
+###Valid Parentheses
+
+    Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+    The brackets must close in the correct order, "()" and "()[]{}" are all valid but "(]" and "([)]" are not.
+
+Do it with a stack.
+
+```java
+public class Solution {
+    public boolean isValid(String s) {
+        Stack<Character> stack = new Stack();
+        for(int i = 0;i < s.length(); i ++){
+            char c = s.charAt(i);
+            if(!stack.isEmpty()){
+                Character last = stack.peek();
+                switch(c){
+                    case ')':
+                        if(last == '('){
+                            stack.pop();
+                        }else{
+                            stack.push(c);
+                        }
+                        break;
+                    case ']':
+                        if(last == '['){
+                            stack.pop();
+                        }else{
+                            stack.push(c);
+                        }
+                        break;
+                    case '}':
+                        if(last == '{'){
+                            stack.pop();
+                        }else{
+                            stack.push(c);
+                        }
+                        break;
+                    default:
+                        stack.push(c);
+                        break;
+                }
+            }else{
+                stack.push(c);
+            }
+        }
+        if(stack.isEmpty()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+```
+
 
 ###Length of Last word
 
