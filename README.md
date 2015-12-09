@@ -8,6 +8,174 @@ From these subjects, I found dynamic programming is very important.
 
 ##Hard
 
+###Merge Intervals
+
+    Given a collection of intervals, merge all overlapping intervals.
+
+    For example,
+    Given [1,3],[2,6],[8,10],[15,18],
+    return [1,6],[8,10],[15,18].
+
+First, sort the inputs order by its start.
+Second, merge intervals one by one with a cursor.
+
+```java
+/**
+ * Definition for an interval.
+ * public class Interval {
+ *     int start;
+ *     int end;
+ *     Interval() { start = 0; end = 0; }
+ *     Interval(int s, int e) { start = s; end = e; }
+ * }
+ */
+public class Solution {
+    public List<Interval> merge(List<Interval> intervals) {
+        if(intervals == null || intervals.size() == 0)   return intervals;
+
+        Collections.sort(intervals, new Comparator<Interval>(){
+            @Override
+            public int compare(Interval int1, Interval int2){
+                return int1.start - int2.start;
+            }
+        });
+        List<Interval> result = new ArrayList<>();
+        Interval cursor = intervals.get(0);
+        for(int i = 1; i < intervals.size(); i ++){
+            if(cursor.end < intervals.get(i).start){
+                result.add(cursor);
+                cursor = intervals.get(i);
+            }else{
+                cursor.end = Math.max(cursor.end, intervals.get(i).end);
+            }
+        }
+        result.add(cursor);
+        return result;
+    }
+}
+```
+
+###Merge k Sorted Lists
+
+    Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity.
+
+First, let's merge them with reverse.
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if(lists == null || lists.length == 0) return null;
+        if(lists.length == 1) return lists[0];
+
+        int mid = (lists.length-1) / 2;
+
+        ListNode[] low = sub(lists, 0, mid+1);
+        ListNode[] high = sub(lists, mid+1, lists.length);
+
+        ListNode lowNode = mergeKLists(low);
+        ListNode highNode = mergeKLists(high);
+
+        return merge2(lowNode, highNode);
+    }
+
+    private ListNode[] sub(ListNode[] list, int begin, int end){
+        int length = end - begin;
+        ListNode[] res = new ListNode[length];
+        for(int i = begin; i < end; i ++){
+            res[i - begin] = list[i];
+        }
+        return res;
+    }
+
+    public ListNode merge2(ListNode node1, ListNode node2){
+        ListNode head = new ListNode(0);
+        ListNode cursor = head;
+        while(node1 != null && node2 != null){
+            int v1 = node1.val;
+            int v2 = node2.val;
+
+            if(v1 < v2){
+                cursor.next = node1;
+                node1 = node1.next;
+            }else{
+                cursor.next = node2;
+                node2 = node1.next;
+            }
+            cursor = cursor.next;
+        }
+        if(node1 != null){
+            cursor.next = node1;
+        }
+        if(node2 != null){
+            cursor.next = node2;
+        }
+        return head.next;
+    }
+}
+```
+unfortunately, codes above can not pass the time requirement.
+Do it with PriorityQueue
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        int length = lists.length;
+        if (length == 0)
+			return null;
+
+		//PriorityQueue is a sorted queue
+		PriorityQueue<ListNode> q = new PriorityQueue<ListNode>(length,
+				new Comparator<ListNode>() {
+					public int compare(ListNode a, ListNode b) {
+						if (a.val > b.val)
+							return 1;
+						else if(a.val == b.val)
+							return 0;
+						else
+							return -1;
+					}
+				});
+
+		//add first node of each list to the queue
+		for (ListNode list : lists) {
+			if (list != null)
+				q.add(list);
+		}
+
+		ListNode head = new ListNode(0);
+		ListNode p = head; // serve as a pointer/cursor
+
+		while (q.size() > 0) {
+			ListNode temp = q.poll();
+			//poll() retrieves and removes the head of the queue - q.
+			p.next = temp;
+
+			//keep adding next element of each list
+			if (temp.next != null)
+				q.add(temp.next);
+
+			p = p.next;
+		}
+
+		return head.next;
+    }
+}
+```
+
 ###Edit Distance
 
     Given two words word1 and word2, find the minimum number of steps required to convert word1 to word2. (each operation is counted as 1 step.)
@@ -874,6 +1042,81 @@ public class Solution {
 ```
 
 ##EASY
+
+###Min Stack
+
+    Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+
+    push(x) -- Push element x onto stack.
+    pop() -- Removes the element on top of the stack.
+    top() -- Get the top element.
+    getMin() -- Retrieve the minimum element in the stack.
+
+Use the Stack of java to implement it.
+
+```java
+class MinStack {
+    private Stack<Integer> stack = new Stack<>();
+    private Stack<Integer> minstack = new Stack<>();
+    public void push(int x) {
+        if(minstack.isEmpty() || minstack.peek() >= x){
+            minstack.push(x);
+        }
+        stack.push(x);
+    }
+
+    public void pop() {
+        if(minstack.peek().equals(stack.peek())){
+            minstack.pop();
+        }
+        stack.pop();
+    }
+
+    public int top() {
+        return stack.peek();
+    }
+
+    public int getMin() {
+        return minstack.peek();
+    }
+}
+```
+
+If use the Java function is not allowed, a tree is also ok.
+
+```java
+class MinStack{
+    Node top = null;
+    public void push(int x){
+        if(top == null){
+            top = new Node(x);
+            top.min = x;
+        }else{
+            Node node = new Node(x);
+            node.next = top;
+            node.min = Math.min(x, top.val);
+            top =  node;
+        }
+    }
+    public void pop(){
+        top = top.next();
+    }
+    public int top(){
+        return top == null ? 0 : top.val;
+    }
+    public int getMin(){
+        return top == null ? 0 : top.min;
+    }
+}
+class Node{
+    int val;
+    int min;
+    Node next;
+    public Node(int val){
+        this.val = val;
+    }
+}
+```
 
 ###Palindrome Permutation
 
