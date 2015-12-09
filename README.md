@@ -390,6 +390,53 @@ public class Solution {
 
 ##Medium
 
+###Meeting Rooms II
+
+    Given an array of meeting time intervals consisting of start and end times [[s1,e1], [s2,e2],...] (si < ei), find the minimum number of conference rooms required.
+    For example,
+    Given [[0, 30],[5, 10],[15, 20]],
+    return 2.
+
+First, sort the inputs order by its abs value.
+Then, check numbers in the list, if number>=0 then ++, else -- and compare it with max;
+
+```java
+public class Solution{
+
+    public int minMeetingRooms(Interval[] intervals){
+        if(intervals == null || intervals.length == 0){
+            return 0;
+        }
+        if(intervals.length == 1){
+            return 1;
+        }
+        List<Integer> list = new ArrayList<>();
+        for(Interval inter : intervals){
+            list.add(inter.start);
+            list.add(-inter.end);
+        }
+        Collections.sort(list, new Comparator<Integer>(){
+            @Override
+            public int compare(Integer i1, Integer i2){
+                return Math.abs(i1) - Math.abs(i2);
+            }
+        });
+        int result = 0;
+        int count = 0;
+        for(int i = 0; i < list.size(); i ++){
+            if(list.get(i) >= 0){
+                count++;
+            }else{
+                count--;
+            }
+            result = Math.max(count, result);
+        }
+        return result;
+    }
+}
+
+```
+
 ###Missing Ranges
 
     Given a sorted integer array where the range of elements are [lower, upper] inclusive, return its missing ranges.
@@ -1042,6 +1089,41 @@ public class Solution {
 ```
 
 ##EASY
+
+###Meeting Rooms
+
+    Given an array of meeting time intervals consisting of start and end times [[s1,e1],[s2,e2],...] (si < ei), determine if a person could attend all meetings.
+
+    For example,
+    Given [[0, 30],[5, 10],[15, 20]],
+    return false.
+
+Just sort the input with its start. Then find whether the end numbers are overlap.
+
+```java
+public class Solution{
+    public boolean canAttendMeetings(List<Interval> intervals){
+        if(intervals == null || intervals.size() < 1){
+            return intervals;
+        }
+        Collections.sort(intervals, new Comparator<Interval>(){
+            @Override
+            public int compare(Interval int1, Interval int2){
+                return int1.start - int2.start;
+            }
+        });
+        int first = intervals.get(0).end;
+        for(int i = 1; i < intervals.size(); i ++){
+            if(first < intervals.get(i).end){
+                first = intervals.get(i).end;
+            }else{
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
 
 ###Min Stack
 
