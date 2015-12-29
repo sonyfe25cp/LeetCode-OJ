@@ -1090,6 +1090,31 @@ public class Solution {
 
 ##EASY
 
+###Climbing Stairs
+
+    You are climbing a stair case. It takes n steps to reach to the top.
+
+    Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+
+It's easy to count with dp.
+
+```java
+public class Solution {
+    public int climbStairs(int n) {
+        if(n <=  2){
+            return n;
+        }
+        int[] step = new int[n+1];
+        step[1] = 1;
+        step[2] = 2;
+        for(int i = 3; i <= n; i ++){
+            step[i] = step[i-1]+ step[i-2];
+        }
+        return step[n];
+    }
+}
+```
+
 ###Meeting Rooms
 
     Given an array of meeting time intervals consisting of start and end times [[s1,e1],[s2,e2],...] (si < ei), determine if a person could attend all meetings.
