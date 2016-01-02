@@ -1090,6 +1090,139 @@ public class Solution {
 
 ##EASY
 
+###Reverse Linked List *
+
+   Reverse a singly linked list.
+
+Reverse it.
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode reverseList(ListNode head) {
+        if(head == null) return null;
+        if(head.next == null) return head;
+        ListNode p = head.next;
+        ListNode rp = reverseList(p);
+        p.next = head;
+        head.next = null;
+        return rp;
+    }
+}
+```
+
+###Roman to Integer
+
+    Given a roman numeral, convert it to an integer.
+
+    Input is guaranteed to be within the range from 1 to 3999.
+
+Set one cursor, if the number[i-1] < number[i], then number[i] - 2 *  number[i], else count += number[i].
+
+```java
+public class Solution {
+    public int romanToInt(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        map.put('I', 1);
+        map.put('V', 5);
+        map.put('X', 10);
+        map.put('C', 100);
+        map.put('D', 500);
+        map.put('L', 50);
+        map.put('M', 1000);
+
+        char[] array = s.toCharArray();
+        int count = map.get(array[0]);
+        for(int i = 1; i < array.length; i ++){
+            if(map.get(array[i-1]) < map.get(array[i]) ){
+                count += (map.get(array[i]) - 2 * map.get(array[i-1]));
+            }else{
+                count += map.get(array[i]);
+            }
+
+        }
+        return count;
+    }
+}
+```
+
+###Excel Sheet Column Number
+
+    Related to question Excel Sheet Column Title
+
+    Given a column title as appear in an Excel sheet, return its corresponding column number.
+
+    For example:
+
+        A -> 1
+        B -> 2
+        C -> 3
+        ...
+        Z -> 26
+        AA -> 27
+        AB -> 28 
+
+Think about binary number.
+
+```java
+public class Solution {
+    public int titleToNumber(String s) {
+        if(s == null || s.length() == 0){
+            return 0;
+        }
+        Map<Character, Integer> map = new HashMap<>();
+        int cc = 1;
+        for(char c = 'A'; c <= 'Z'; c++){
+            map.put(c, cc ++);
+        }
+        char array[] = s.toCharArray();
+        int num = 0;
+        for(int i = 0; i < array.length; i ++){
+            char c = array[i];
+            int bei = (array.length - i - 1);
+            num += (map.get(c) * Math.pow(26, bei));
+        }
+        return num;
+    }
+}
+```
+
+
+###Delete Node in a Linked List
+    
+    Write a function to delete a node (except the tail) in a singly linked list, given only access to that node.
+
+    Supposed the linked list is 1 -> 2 -> 3 -> 4 and you are given the third node with value 3, the linked list should become 1 -> 2 -> 4 after calling your function.
+
+Just make current node same with next.next.
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public void deleteNode(ListNode node) {
+        if(node == null){
+            return;
+        }
+        node.val = node.next.val;
+        node.next = node.next.next;
+    }
+}
+```
+
 ###Climbing Stairs
 
     You are climbing a stair case. It takes n steps to reach to the top.
